@@ -16,7 +16,7 @@ cursor.execute(create_table)
 
 #insert data into the table 
 insert_data = 'INSERT INTO vgsales(Rank, Name, Platform, Year, Genre, Publisher, NA_Sales, EU_Sales, JP_Sales, Other_Sales, Global_Sales) VALUES (?,?,?,?,?,?,?,?,?,?,?)'
-file = open('/workspaces/FINAL_PROJECT/vgsales.csv')
+file = open('/workspaces/FINAL_PROJECT/vgsales.csv',encoding='utf-8')
 contents = csv.reader(file)
 next(contents)
 
