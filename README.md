@@ -13,3 +13,14 @@ This dataset is about Video Game Sales Analysis, it includes the title, genre, w
 
 ## Continuous Delivery
 Use ```git push``` to push the docker iamge to a private repository.
+
+## SQL Queries
+
+1.Find the top 10 most popular video games according to the global sales. 
+
+2.Find the types of games that users preferred from 2011 to 2015, 2015-2020.
+
+3.Find the top 10 global publishers from 2011-2015, 2015-2020.
+
+## App Runner Link
+https://4vpemuypdy.us-east-1.awsapprunner.com
