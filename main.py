@@ -27,8 +27,8 @@ if header != None:
 connection.commit()
 
 
-cursor.execute("SELECT Publisher, COUNT(Publisher) AS 'num_of_pub' FROM vgsales WHERE Year BETWEEN 2011 AND 2015 GROUP BY Publisher ORDER BY num_of_pub DESC LIMIT 10;")
-print(cursor.fetchall())
+# cursor.execute("SELECT Publisher, COUNT(Publisher) AS 'num_of_pub' FROM vgsales WHERE Year BETWEEN 2011 AND 2015 GROUP BY Publisher ORDER BY num_of_pub DESC LIMIT 10;")
+# print(cursor.fetchall())
 
 connection.close()
 
@@ -40,15 +40,21 @@ async def root():
     return {"message": "Hello, welcome!"}
 
 # the top 10 most popular video games according to the global sales
-query1 = """SELECT Rank, Name, Platform, Year, Genre, Publisher, Global_Sales FROM vgsales limit 10;"""
+query1 = """SELECT Name FROM vgsales 
+            ORDER BY Global_Sales 
+            Limit 10;
+            """
 
 @app.get("/popular")
 async def popular():
-    return {"top 10 most popular video games": "10"} 
-
-
-
-
+    conn = sqlite3.connect("vgsales.db")
+    cursor = conn.cursor()
+    cursor.execute(query1)
+    result = cursor.fetchall()
+    res = "The top 10 most popular video games are: "
+    names = ", ".join([elem[0] for elem in result])
+    return res + names
+    
 
 
 
@@ -61,6 +67,7 @@ query2 = """
     GROUP BY Genre 
     ORDER BY num_of_genre DESC;
 """
+
 query3 = """
     SELECT Genre, COUNT(Genre) AS 'num_of_genre' 
     FROM vgsales 
@@ -72,7 +79,17 @@ query3 = """
 
 @app.get("/type")
 async def type1():
-    return {"2011-2015": "10"} 
+    conn = sqlite3.connect("vgsales.db")
+    cursor = conn.cursor()
+    cursor.execute(query2)
+    result = cursor.fetchall()
+    res = "The types of games that users preferred from 2011 to 2015 are: "
+    names = ", ".join([elem[0] for elem in result])
+    res2 = "The types of games that users preferred from 2015 to 2020 are: "
+    cursor.execute(query3)
+    result = cursor.fetchall()
+    names2 = ", ".join([elem[0] for elem in result])
+    return res + names + "                                          " + res2 + names2
 
 
 
@@ -95,7 +112,19 @@ query5 = """
     LIMIT 10;
 """
 
-
+@app.get("/publisher")
+async def type2():
+    conn = sqlite3.connect("vgsales.db")
+    cursor = conn.cursor()
+    cursor.execute(query4)
+    result = cursor.fetchall()
+    res = "The top global publishers that users preferred from 2011 to 2015 are: "
+    names = ", ".join([elem[0] for elem in result])
+    res2 = "The top global publishers that users preferred from 2015 to 2020 are: "
+    cursor.execute(query5)
+    result = cursor.fetchall()
+    names2 = ", ".join([elem[0] for elem in result])
+    return res + names + "                                                                                                                           " + res2 + names2
 
 
 
@@ -107,4 +136,4 @@ query5 = """
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, port=8080, host="0.0.0.0")
+    uvicorn.run("main:app", port=8080, reload = True, host="0.0.0.0")
